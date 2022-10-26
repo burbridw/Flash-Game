@@ -41,7 +41,7 @@ img {
   background-color: yellow;
 }
 
-#game-buttons button:nth-of-type(3) {
+#game-buttons button:nth-of-type(4) {
   width: 30%;
 }
 
@@ -152,6 +152,7 @@ img {
   margin: 0 auto;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .image-grid {
   display: grid;
@@ -160,12 +161,26 @@ img {
   text-align: center;
 }
 
+.eight {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.ten {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+.twelve {
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
 .image img {
   width: 100%;
   height: 100%;
   max-height: 160px;
   max-width: 200px;
-
 }
 
 .button-display {
@@ -223,6 +238,16 @@ img {
 
 .conceal-menu:hover {
   height: 100%;
+}
+
+.hidden {
+  opacity: 0%;
+  transition : opacity 3s linear;
+}
+
+.shown {
+  opacity: 100%;
+  transition: opacity 3s linear;
 }
 
 .unavailable {

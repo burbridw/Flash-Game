@@ -6,10 +6,13 @@ let imgList = ""
 let selectionOpen = false
 let gameActive = false
 let round = 0
+let gameType = 6
+let hidden = true
 
 const gameBtnDisplay = document.getElementById("game-btn-container")
 const topicBtnDisplay = document.getElementById("topic-btn-container")
 const cardsContainer = document.querySelector(".cards-container")
+const imageGrid = document.querySelector(".image-grid")
 
 const feelingsArr = ["./images/feelings/img1.png","./images/feelings/img2.png", "./images/feelings/img3.png", "./images/feelings/img4.png", "./images/feelings/img5.png", "./images/feelings/img6.png", "./images/feelings/img7.png", "./images/feelings/img8.png", "./images/feelings/img9.png","./images/feelings/img10.png"]
 const feelingsTextArr = ["fine", "good", "great", "happy", "sad", "tired", "sleepy", "busy", "hungry", "thirsty"]
@@ -161,7 +164,11 @@ const clubactivitiesBtn = document.getElementById("clubactivities")
 
 const quickStart = document.getElementById("quick-start")
 const clearBtn = document.getElementById("clear")
+const gameTypeBtn = document.getElementById("game-type")
 const renderBtn = document.getElementById("render-btn")
+
+const flashStart = document.getElementById("start")
+
 
 feelingsBtn.addEventListener("click",() => beginSelection(feelingsArr))
 weatherBtn.addEventListener("click",() => beginSelection(weatherArr))
@@ -294,6 +301,32 @@ quickStart.addEventListener("click",function(){
     renderGame(activeArr)
 })
 
+gameTypeBtn.addEventListener("click",function() {
+    if ( gameType === 6 ) {
+        gameType = 8
+        gameTypeBtn.textContent = "Medium (8)"
+        imageGrid.classList.add("eight")
+        imageGrid.innerHTML = ""
+    } else if ( gameType === 8 ) {
+        gameType = 10
+        gameTypeBtn.textContent = "Hard (10)"
+        imageGrid.classList.remove("eight")
+        imageGrid.classList.add("ten")
+        imageGrid.innerHTML = ""
+    } else if ( gameType === 10 ) {
+        gameType = 12
+        gameTypeBtn.textContent = "Very Hard (12)"
+        imageGrid.classList.remove("ten")
+        imageGrid.classList.add("twelve")
+        imageGrid.innerHTML = ""
+    } else if ( gameType === 12 ) {
+        gameType = 6
+        gameTypeBtn.textContent = "Easy (6)"
+        imageGrid.classList.remove("twelve")
+        imageGrid.innerHTML = ""
+    }
+})
+
 renderBtn.addEventListener("click", function(){
     if (activeArr.length >= 1) {
     renderGame(activeArr)
@@ -304,15 +337,59 @@ clearBtn.addEventListener("click",function(){
     clearAll()
 })
 
+flashStart.addEventListener("click",function() {
+    let images = document.querySelectorAll(".image")
+    if (hidden) {
+        hidden = false
+        for ( let i = 0; i < gameType; i++ ) {
+            setTimeout(() => {
+                let currentImage = imageGrid.children[i]
+                currentImage.classList.remove("hidden")
+                currentImage.classList.add("shown")
+            } , 1000 )
+        }
+
+        /*images.forEach( (x) => {
+        x.classList.remove("hidden")
+        x.classList.add("shown")
+        setTimeout(() => {
+
+        }, 1000)
+    })*/
+    } else if (!hidden) {
+        hidden = true
+        for ( let i = 0; i < gameType; i++ ) {
+            let currentImage = imageGrid.children[i]
+            currentImage.classList.remove("shown")
+            currentImage.classList.add("hidden")
+            setTimeout(() => {
+            } ,1000 )
+        }
+
+        /*images.forEach( (x) => {
+        x.classList.remove("shown")
+        x.classList.add("hidden")
+        setTimeout(() => {
+
+        }, 1000)
+    })*/
+    }
+})
+
 activeArr = animalsArr
 
 function renderGame(arr){
-    displayArr = activeArr.sort( () => { return 0.5 - Math.random() } )
-    displayArr = displayArr.slice(0, 6)
-    let imagegrid = document.querySelector(".image-grid")
+    imageGrid.innerHTML = ""
+    for ( let i = 0; i < gameType; i++ ) {
+        imageGrid.innerHTML += `
+        <div class="image hidden"></div>
+        `
+    }
+    displayArr = arr.sort( () => { return 0.5 - Math.random() } )
+    displayArr = displayArr.slice(0, gameType)
     
     for ( let i = 0; i < displayArr.length; i++ ) {
-        let currentbox = imagegrid.children[i]
+        let currentbox = imageGrid.children[i]
         currentbox.innerHTML = `<img src="${displayArr[i]}">`
     }
 
