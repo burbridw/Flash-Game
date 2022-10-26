@@ -7,7 +7,8 @@ let selectionOpen = false
 let gameActive = false
 let round = 0
 let gameType = 6
-let hidden = true
+let loopRunning = false
+let terminate = false
 
 const gameBtnDisplay = document.getElementById("game-btn-container")
 const topicBtnDisplay = document.getElementById("topic-btn-container")
@@ -302,6 +303,7 @@ quickStart.addEventListener("click",function(){
 })
 
 gameTypeBtn.addEventListener("click",function() {
+    if ( !loopRunning ) {
     if ( gameType === 6 ) {
         gameType = 8
         gameTypeBtn.textContent = "Medium (8)"
@@ -325,10 +327,11 @@ gameTypeBtn.addEventListener("click",function() {
         imageGrid.classList.remove("twelve")
         imageGrid.innerHTML = ""
     }
+}
 })
 
 renderBtn.addEventListener("click", function(){
-    if (activeArr.length >= 1) {
+    if (activeArr.length >= 1 && !loopRunning) {
     renderGame(activeArr)
     }
 })
@@ -336,43 +339,45 @@ renderBtn.addEventListener("click", function(){
 clearBtn.addEventListener("click",function(){
     clearAll()
 })
+let loopCount = 0
+
+function fadeLoop() {
+    if ( !terminate ) {
+    setTimeout(function() {
+        let currentImage = imageGrid.children[loopCount]
+        currentImage.classList.remove("hidden")
+        currentImage.classList.add("shown")
+        unFadeLoop()
+        }, 1000)
+    }
+}
+
+function unFadeLoop() {
+    setTimeout(function() {
+        let currentImage = imageGrid.children[loopCount]
+        currentImage.classList.remove("shown")
+        currentImage.classList.add("hidden")
+        loopCount++
+        if ( loopCount < gameType && !terminate) {
+            fadeLoop()
+        } else {
+            loopRunning = false
+            flashStart.textContent = "START"
+        }
+    }, 500)
+}
 
 flashStart.addEventListener("click",function() {
-    let images = document.querySelectorAll(".image")
-    if (hidden) {
-        hidden = false
-        for ( let i = 0; i < gameType; i++ ) {
-            setTimeout(() => {
-                let currentImage = imageGrid.children[i]
-                currentImage.classList.remove("hidden")
-                currentImage.classList.add("shown")
-            } , 1000 )
-        }
-
-        /*images.forEach( (x) => {
-        x.classList.remove("hidden")
-        x.classList.add("shown")
-        setTimeout(() => {
-
-        }, 1000)
-    })*/
-    } else if (!hidden) {
-        hidden = true
-        for ( let i = 0; i < gameType; i++ ) {
-            let currentImage = imageGrid.children[i]
-            currentImage.classList.remove("shown")
-            currentImage.classList.add("hidden")
-            setTimeout(() => {
-            } ,1000 )
-        }
-
-        /*images.forEach( (x) => {
-        x.classList.remove("shown")
-        x.classList.add("hidden")
-        setTimeout(() => {
-
-        }, 1000)
-    })*/
+    if ( !loopRunning ) {
+        loopCount = 0
+        loopRunning = true
+        terminate = false
+        flashStart.textContent = "STOP"
+        fadeLoop()
+    } else {
+        terminate = true
+        loopRunning = false
+        flashStart.textContent = "START"
     }
 })
 

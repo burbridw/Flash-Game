@@ -242,12 +242,12 @@ img {
 
 .hidden {
   opacity: 0%;
-  transition : opacity 3s linear;
+  transition : opacity 0.5s linear;
 }
 
 .shown {
   opacity: 100%;
-  transition: opacity 3s linear;
+  transition: opacity 0.5s linear;
 }
 
 .unavailable {
