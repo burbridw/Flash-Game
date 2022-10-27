@@ -5,10 +5,10 @@ let answersArr = []
 let imgList = ""
 let selectionOpen = false
 let gameActive = false
-let round = 0
 let gameType = 6
 let loopRunning = false
 let terminate = false
+let imagesHidden = true
 
 const gameBtnDisplay = document.getElementById("game-btn-container")
 const topicBtnDisplay = document.getElementById("topic-btn-container")
@@ -168,6 +168,7 @@ const clearBtn = document.getElementById("clear")
 const gameTypeBtn = document.getElementById("game-type")
 const renderBtn = document.getElementById("render-btn")
 
+const showHideBtn = document.getElementById("show-hide")
 const flashStart = document.getElementById("start")
 
 
@@ -317,7 +318,7 @@ gameTypeBtn.addEventListener("click",function() {
         imageGrid.innerHTML = ""
     } else if ( gameType === 10 ) {
         gameType = 12
-        gameTypeBtn.textContent = "Very Hard (12)"
+        gameTypeBtn.textContent = "Hard+ (12)"
         imageGrid.classList.remove("ten")
         imageGrid.classList.add("twelve")
         imageGrid.innerHTML = ""
@@ -333,6 +334,7 @@ gameTypeBtn.addEventListener("click",function() {
 renderBtn.addEventListener("click", function(){
     if (activeArr.length >= 1 && !loopRunning) {
     renderGame(activeArr)
+    renderBtn.textContent = "RESET"
     }
 })
 
@@ -348,11 +350,12 @@ function fadeLoop() {
         currentImage.classList.remove("hidden")
         currentImage.classList.add("shown")
         unFadeLoop()
-        }, 1000)
+        }, 500)
     }
 }
 
 function unFadeLoop() {
+    if ( !terminate ) {
     setTimeout(function() {
         let currentImage = imageGrid.children[loopCount]
         currentImage.classList.remove("shown")
@@ -363,9 +366,35 @@ function unFadeLoop() {
         } else {
             loopRunning = false
             flashStart.textContent = "START"
+            flashStart.classList.add("flash-start-green")
+            flashStart.classList.remove("flash-start-red")
         }
     }, 500)
 }
+}
+
+showHideBtn.addEventListener("click",function() {
+    let allImages = document.querySelectorAll(".image")
+    if ( !loopRunning ) {
+    if ( imagesHidden ) {
+        showHideBtn.textContent = "HIDE ALL"
+        imagesHidden = false
+        terminate = true
+        allImages.forEach( (x) => {
+            x.classList.remove("hidden")
+        })
+    } else {
+        showHideBtn.textContent = "SHOW ALL"
+        imagesHidden = true
+        allImages.forEach ( (x) => {
+            x.classList.add("hidden")
+            x.classList.remove("shown")
+        })
+        
+    }
+}
+})
+
 
 flashStart.addEventListener("click",function() {
     if ( !loopRunning ) {
@@ -373,11 +402,17 @@ flashStart.addEventListener("click",function() {
         loopRunning = true
         terminate = false
         flashStart.textContent = "STOP"
+        flashStart.classList.add("flash-start-red")
+        flashStart.classList.remove("flash-start-green")
+        showHideBtn.textContent = "SHOW ALL"
+        imagesHidden = true
         fadeLoop()
     } else {
         terminate = true
         loopRunning = false
         flashStart.textContent = "START"
+        flashStart.classList.add("flash-start-green")
+        flashStart.classList.remove("flash-start-red")
     }
 })
 
@@ -400,13 +435,13 @@ function renderGame(arr){
 
     cardsContainer.classList.remove("reduced")
     topicBtnDisplay.classList.add("hide-me")
-    round++
 }
 
 
 
 function clearAll() {
     cardsContainer.classList.add("reduced")
+    renderBtn.textContent = "Begin the Game"
     let currenterDiv = document.getElementById("select-container")
     currenterDiv.innerHTML = ""
     activeArr = []

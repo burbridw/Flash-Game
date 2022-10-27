@@ -153,6 +153,7 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
+  background-color: black;
 }
 .image-grid {
   display: grid;
@@ -181,6 +182,8 @@ img {
   height: 100%;
   max-height: 160px;
   max-width: 200px;
+  border-radius: 50%;
+  background-color: yellow;
 }
 
 .button-display {
@@ -195,18 +198,19 @@ img {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  width: 15%;
-  border: 1px solid black;
+  width: 25%;
   height: 100%;
+  font-size: 1.5rem;
 }
 .show-hide-buttons {
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   height: 100%;
+  width: 20%;
 }
 .show-hide-buttons button {
-  height: 40%;
+  height: 60%;
 }
 .start-button{
   height: 100%;
@@ -215,6 +219,14 @@ img {
 .start-button button {
   height: 100%;
   width: 100%;
+  color: white;
+  font-size: 2rem;
+}
+.flash-start-green {
+  background-color: green;
+}
+.flash-start-red {
+  background-color: red;
 }
 
 .flash-buttons {
