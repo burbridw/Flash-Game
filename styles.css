@@ -39,6 +39,7 @@ img {
 }
 #game-buttons button:hover {
   background-color: yellow;
+  z-index: 3;
 }
 
 #game-buttons button:nth-of-type(4) {
@@ -131,7 +132,7 @@ img {
   position: absolute;
   width: 90%;
   height: 80%;
-  top: 10%;
+  top: 11%;
   left: 50%;
   transform: translateX(-50%);
   border-radius: 10px;
@@ -145,6 +146,15 @@ img {
   border: 1px solid black;
   overflow: hidden;
 }
+.answer-display {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: gainsboro;
+  z-index: 2;
+  overflow: hidden;
+}
+
 .cards-display {
   width: 90%;
   height: 80%;
@@ -154,7 +164,63 @@ img {
   align-items: center;
   justify-content: center;
   background-color: black;
+  border-radius: 10px;
+  margin-top: 1px;
 }
+.answer-image-grid {
+  height: 90%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  text-align: center;
+  overflow:hidden;
+  padding-top: 2px;
+}
+.submit-answer-button-box {
+  height: 10%;
+  width: 100%;
+  display: flex;
+  align-items: flex-end;
+}
+.submit-answer {
+  height: 100%;
+  width: 100%;
+  font-size: 2rem;
+  border-radius: 10px;
+}
+.answer-image img {
+  width: 100%;
+  height: 90%;
+  max-height: 150px;
+  max-width: 200px;
+  border-radius: 5px;
+}
+.answer-to-submit {
+  box-shadow: 0 0 2px 5px blue;
+}
+
+.correct {
+  background-color: green;
+}
+.wrong {
+  background-color: red;
+}
+
+.go-to-answer {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 21%;
+  height: 10%;
+  font-size: 3rem;
+  background-color: lightblue;
+  border-radius: 10px;
+  box-shadow: 2px 2px 2px 2px lightblue;
+  border: none;
+  overflow: hidden;
+
+}
+
 .image-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -187,7 +253,6 @@ img {
 }
 
 .button-display {
-  border: 2px solid black;
   height: 20%;
   display: flex;
   flex-wrap: nowrap;
@@ -202,6 +267,14 @@ img {
   height: 100%;
   font-size: 1.5rem;
 }
+.speed-buttons button:hover {
+  background-color: yellowgreen;
+}
+
+.speed-set {
+  background-color: yellowgreen;
+  box-shadow: 0 0 2px 2px yellowgreen;
+}
 .show-hide-buttons {
   display: flex;
   flex-direction: column;
@@ -212,8 +285,11 @@ img {
 .show-hide-buttons button {
   height: 60%;
 }
+.show-hide-buttons button:hover {
+  background-color: lawngreen;
+}
 .start-button{
-  height: 100%;
+  height: 95%;
   width: 20%;
 }
 .start-button button {
@@ -268,4 +344,11 @@ img {
 
 #game-buttons button.unavailable:hover {
   background-color: transparent
+}
+
+.warning {
+  box-shadow: 0 0 2px 5px red;
+}
+#game-buttons .warning {
+  box-shadow: 0 0 2px 5px red;
 }

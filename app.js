@@ -6,14 +6,21 @@ let imgList = ""
 let selectionOpen = false
 let gameActive = false
 let gameType = 6
+let loopCount = 0
 let loopRunning = false
 let terminate = false
 let imagesHidden = true
+let answersSeen = false
+let answersChecked = false
+
+let speed = 500
 
 const gameBtnDisplay = document.getElementById("game-btn-container")
 const topicBtnDisplay = document.getElementById("topic-btn-container")
 const cardsContainer = document.querySelector(".cards-container")
 const imageGrid = document.querySelector(".image-grid")
+const answerImageGrid = document.querySelector(".answer-image-grid")
+const answerDisplay = document.querySelector(".answer-display")
 
 const feelingsArr = ["./images/feelings/img1.png","./images/feelings/img2.png", "./images/feelings/img3.png", "./images/feelings/img4.png", "./images/feelings/img5.png", "./images/feelings/img6.png", "./images/feelings/img7.png", "./images/feelings/img8.png", "./images/feelings/img9.png","./images/feelings/img10.png"]
 const feelingsTextArr = ["fine", "good", "great", "happy", "sad", "tired", "sleepy", "busy", "hungry", "thirsty"]
@@ -170,7 +177,12 @@ const renderBtn = document.getElementById("render-btn")
 
 const showHideBtn = document.getElementById("show-hide")
 const flashStart = document.getElementById("start")
+const slowBtn = document.getElementById("slow")
+const mediumBtn = document.getElementById("medium")
+const fastBtn = document.getElementById("fast")
 
+const goToAnswerBtn = document.querySelector(".go-to-answer")
+const submitAnswerBtn = document.querySelector(".submit-answer")
 
 feelingsBtn.addEventListener("click",() => beginSelection(feelingsArr))
 weatherBtn.addEventListener("click",() => beginSelection(weatherArr))
@@ -298,6 +310,34 @@ function passSelect() {
     
 }
 
+function checkNumbers() {
+    if ( activeArr.length < 8 && gameType > 6) {
+        gameType = 6
+        gameTypeBtn.textContent = "Easy (6)"
+        gameTypeBtn.classList.add("warning")
+        setTimeout( () => {
+        gameTypeBtn.classList.remove("warning")
+        }, 3000)
+        imageGrid.className = ("image-grid")
+    } else if ( activeArr.length < 10 && gameType > 8 ) {
+        gameType = 8
+        gameTypeBtn.textContent = "Medium (8)"
+        gameTypeBtn.classList.add("warning")
+        setTimeout( () => {
+        gameTypeBtn.classList.remove("warning")
+        }, 3000)
+        imageGrid.className = ("image-grid eight")
+    } else if ( activeArr.length < 12 && gameType > 10 ) {
+        gameType = 10
+        gameTypeBtn.textContent = "Hard (10)"
+        gameTypeBtn.classList.add("warning")
+        setTimeout( () => {
+        gameTypeBtn.classList.remove("warning")
+        }, 3000)
+        imageGrid.className = ("image-grid ten")
+    }
+}
+
 quickStart.addEventListener("click",function(){
     activeArr = activeArr.concat(feelingsArr).concat(numbersArr).concat(weatherArr).concat(colorArr).concat(shapesArr).concat(sportsArr).concat(foodsArr).concat(dessertsArr).concat(drinksArr).concat(fruitsvegetablesArr).concat(ingredientsArr).concat(mealsArr).concat(tastesArr).concat(animalsArr).concat(seaanimalsArr).concat(bugsArr).concat(natureArr).concat(monthsArr).concat(seasonsArr).concat(timesofdayArr).concat(daysArr).concat(countriesArr).concat(familyArr).concat(peopleArr).concat(personalitiesArr).concat(actions1Arr).concat(pastactionsArr).concat(actions2Arr).concat(dailyactivitiesArr).concat(frequencyArr).concat(bodyArr).concat(clothesArr).concat(buildingsArr).concat(directionsArr).concat(locationsArr).concat(vehiclesArr).concat(schoolArr).concat(subjectsArr).concat(instrumentsArr).concat(stationaryArr).concat(commonitemsArr).concat(activitiesArr).concat(schooleventsArr).concat(yearlyeventsArr).concat(conditionsArr).concat(descriptionsArr).concat(jobsArr).concat(clubactivitiesArr)
     renderGame(activeArr)
@@ -309,69 +349,71 @@ gameTypeBtn.addEventListener("click",function() {
         gameType = 8
         gameTypeBtn.textContent = "Medium (8)"
         imageGrid.classList.add("eight")
-        imageGrid.innerHTML = ""
     } else if ( gameType === 8 ) {
         gameType = 10
         gameTypeBtn.textContent = "Hard (10)"
         imageGrid.classList.remove("eight")
         imageGrid.classList.add("ten")
-        imageGrid.innerHTML = ""
     } else if ( gameType === 10 ) {
         gameType = 12
         gameTypeBtn.textContent = "Hard+ (12)"
         imageGrid.classList.remove("ten")
         imageGrid.classList.add("twelve")
-        imageGrid.innerHTML = ""
     } else if ( gameType === 12 ) {
         gameType = 6
         gameTypeBtn.textContent = "Easy (6)"
         imageGrid.classList.remove("twelve")
-        imageGrid.innerHTML = ""
+    }
+    if ( gameActive ) {
+    imageGrid.innerHTML = ""
+    showHideBtn.textContent = "SHOW ALL"
+    imagesHidden = true
+    renderGame(activeArr)
+    answersSeen = false
+    answersChecked = false
+    if ( !goToAnswerBtn.classList.contains("hide-me") ) {
+    goToAnswerBtn.classList.add("hide-me")
+    }
     }
 }
 })
 
 renderBtn.addEventListener("click", function(){
-    if (activeArr.length >= 1 && !loopRunning) {
+    if (activeArr.length >= 6 && !loopRunning) {
     renderGame(activeArr)
     renderBtn.textContent = "RESET"
+    } else if ( activeArr.length < 6 && !loopRunning ) {
+        renderBtn.textContent = "Not enough images"
+        renderBtn.classList.add("warning")
+        setTimeout( () => {
+            renderBtn.textContent = "Begin the Game"
+            renderBtn.classList.remove("warning")
+        }, 3000)
     }
 })
 
 clearBtn.addEventListener("click",function(){
     clearAll()
 })
-let loopCount = 0
 
-function fadeLoop() {
-    if ( !terminate ) {
-    setTimeout(function() {
-        let currentImage = imageGrid.children[loopCount]
-        currentImage.classList.remove("hidden")
-        currentImage.classList.add("shown")
-        unFadeLoop()
-        }, 500)
-    }
-}
-
-function unFadeLoop() {
-    if ( !terminate ) {
-    setTimeout(function() {
-        let currentImage = imageGrid.children[loopCount]
-        currentImage.classList.remove("shown")
-        currentImage.classList.add("hidden")
-        loopCount++
-        if ( loopCount < gameType && !terminate) {
-            fadeLoop()
-        } else {
-            loopRunning = false
-            flashStart.textContent = "START"
-            flashStart.classList.add("flash-start-green")
-            flashStart.classList.remove("flash-start-red")
-        }
-    }, 500)
-}
-}
+slowBtn.addEventListener("click",function() {
+    speed = 1000
+    let previousSetting = document.querySelector(".speed-set")
+    previousSetting.classList.remove("speed-set")
+    slowBtn.classList.add("speed-set")
+})
+mediumBtn.addEventListener("click",function() {
+    speed = 500
+    let previousSetting = document.querySelector(".speed-set")
+    previousSetting.classList.remove("speed-set")
+    mediumBtn.classList.add("speed-set")
+})
+fastBtn.addEventListener("click",function() {
+    speed = 250
+    let previousSetting = document.querySelector(".speed-set")
+    previousSetting.classList.remove("speed-set")
+    fastBtn.classList.add("speed-set")
+})
 
 showHideBtn.addEventListener("click",function() {
     let allImages = document.querySelectorAll(".image")
@@ -395,7 +437,6 @@ showHideBtn.addEventListener("click",function() {
 }
 })
 
-
 flashStart.addEventListener("click",function() {
     if ( !loopRunning ) {
         loopCount = 0
@@ -416,31 +457,147 @@ flashStart.addEventListener("click",function() {
     }
 })
 
+function fadeLoop() {
+    if ( !terminate ) {
+    setTimeout(function() {
+        let currentImage = imageGrid.children[loopCount]
+        currentImage.classList.remove("hidden")
+        currentImage.classList.add("shown")
+        unFadeLoop()
+        }, speed)
+    }
+}
+
+function unFadeLoop() {
+    if ( !terminate ) {
+    setTimeout(function() {
+        let currentImage = imageGrid.children[loopCount]
+        currentImage.classList.remove("shown")
+        currentImage.classList.add("hidden")
+        loopCount++
+        if ( loopCount < gameType && !terminate) {
+            fadeLoop()
+        } else {
+            loopRunning = false
+            flashStart.textContent = "START"
+            flashStart.classList.add("flash-start-green")
+            flashStart.classList.remove("flash-start-red")
+            answersSeen = true
+            goToAnswerBtn.classList.remove("hide-me")
+        }
+    }, speed)
+}
+}
+
+goToAnswerBtn.addEventListener("click",function() {
+    if ( !loopRunning ) {
+    answerDisplay.classList.remove("reduced")
+    goToAnswerBtn.classList.add("hide-me")
+    submitAnswerBtn.classList.remove("hide-me")
+    }
+})
+
+submitAnswerBtn.addEventListener("click",function() {
+    let allImages = document.querySelectorAll(".answer-display-image")
+    answersChecked = true
+    allImages.forEach( (x) => {
+        let currentImageSrc = x.getAttribute("src")
+        if ( displayArr.includes(currentImageSrc) ) {
+            x.classList.add("correct")
+        } else {
+            x.classList.add("wrong")
+        }
+    })
+})
+
 activeArr = animalsArr
 
 function renderGame(arr){
+    
+    gameActive = true
+    checkNumbers()
+    if ( !answerDisplay.classList.contains("reduced") ) {
+    answerDisplay.classList.add("reduced")
+    }
     imageGrid.innerHTML = ""
     for ( let i = 0; i < gameType; i++ ) {
         imageGrid.innerHTML += `
         <div class="image hidden"></div>
         `
     }
-    displayArr = arr.sort( () => { return 0.5 - Math.random() } )
-    displayArr = displayArr.slice(0, gameType)
+    answerImageGrid.innerHTML = ""
+    for ( let i = 0; i < 12; i++ ) {
+        answerImageGrid.innerHTML += `
+        <div class="answer-image"></div>
+        `
+    }
+    let randomNumberOne = Math.random()
+    console.log(randomNumberOne)
+    let randomNumberTwo = Math.random()
+    console.log(randomNumberTwo)
+
+    console.log(arr)
+
+    displayArr = arr
+
+    console.log(displayArr)
+
+    displayArr.sort( () => { return 0.5 - Math.random() } )
+
+    console.log(displayArr)
+
+    arr = activeArr
+
+    console.log(arr)
     
+    console.log(activeArr)
+
+
+    answersArr = arr.slice(0, 12)
+    /*if ( gameType < 10 ) {
+    answersArr = displayArr.slice(0, 12)
+    answersArr = answersArr.sort( () => { return 0.5 - Math.random() } )
+    } else { 
+        answersArr = activeArr
+        answersArr = answersArr.slice(0, 12)
+    }*/
+    displayArr = displayArr.slice(0, gameType)
+
+
     for ( let i = 0; i < displayArr.length; i++ ) {
         let currentbox = imageGrid.children[i]
         currentbox.innerHTML = `<img src="${displayArr[i]}">`
     }
-
+    for ( let i = 0; i < answersArr.length; i++ ) {
+        let currentbox = answerImageGrid.children[i]
+        currentbox.innerHTML = `<img class="answer-display-image" src="${answersArr[i]}">`
+    }
+    let answerImages = document.querySelectorAll(".answer-display-image")
+    answerImages.forEach( (x) => {
+        if ( !answersChecked ) {
+        x.addEventListener("click",function() {
+            if ( !x.classList.contains("answer-to-submit") ) {
+            x.classList.add("answer-to-submit")
+            } else {
+                x.classList.remove("answer-to-submit")
+            }
+        })
+    }
+    })
+    showHideBtn.textContent = "SHOW ALL"
+    imagesHidden = true
+    answersSeen = false
+    answersChecked = false
+    if ( !goToAnswerBtn.classList.contains("hide-me") ) {
+    goToAnswerBtn.classList.add("hide-me")
+    }
     cardsContainer.classList.remove("reduced")
     topicBtnDisplay.classList.add("hide-me")
 }
 
-
-
 function clearAll() {
     cardsContainer.classList.add("reduced")
+    answerDisplay.classList.add("reduced")
     renderBtn.textContent = "Begin the Game"
     let currenterDiv = document.getElementById("select-container")
     currenterDiv.innerHTML = ""
@@ -448,6 +605,11 @@ function clearAll() {
     displayArr = []
     selectArr = []
     gameActive = false
+    answersSeen = false
+    answersChecked = false
+    if ( !goToAnswerBtn.classList.contains("hide-me") ) {
+    goToAnswerBtn.classList.add("hide-me")
+    }
     topicBtnDisplay.classList.remove("hide-me")
     document.querySelectorAll(`.toggleOn`).forEach( (x) => {
     x.className = "toggleOff"
