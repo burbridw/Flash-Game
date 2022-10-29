@@ -13,7 +13,6 @@ let imagesHidden = true
 let answersSeen = false
 let answersChecked = false
 let correctCount = 0
-
 let speed = 500
 
 const gameBtnDisplay = document.getElementById("game-btn-container")
@@ -558,8 +557,6 @@ submitAnswerBtn.addEventListener("click",function() {
     submitAnswerBtn.textContent = `You scored ${correctCount} / ${gameType}`
     submitAnswerBtn.classList.add("after-answers")
 })
-
-activeArr = animalsArr
 
 function renderGame(arr){
     gameActive = true
