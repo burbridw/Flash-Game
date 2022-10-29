@@ -145,6 +145,7 @@ img {
   justify-content: space-between;
   border: 1px solid black;
   overflow: hidden;
+  box-shadow: 2px 2px 3px 2px gray;
 }
 .answer-display {
   position: absolute;
@@ -187,6 +188,15 @@ img {
   width: 100%;
   font-size: 2rem;
   border-radius: 10px;
+  transition: all 0.3s linear;
+}
+.submit-answer:hover {
+  box-shadow: 0 0 5px 3px black;
+}
+.after-answers {
+  background-color: black;
+  color: white;
+  box-shadow: 0 0 5px 3px black;
 }
 .answer-image img {
   width: 100%;
@@ -213,14 +223,16 @@ img {
   bottom: 21%;
   height: 10%;
   font-size: 3rem;
-  background-color: lightblue;
+  background-color: white;
+  color: black;
   border-radius: 10px;
-  box-shadow: 2px 2px 2px 2px lightblue;
+  box-shadow: 0 -0 3px 5px white;
   border: none;
   overflow: hidden;
-
 }
-
+.go-to-answer:hover {
+  box-shadow: 0 0 8px 5px white;
+}
 .image-grid {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

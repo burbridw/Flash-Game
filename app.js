@@ -12,6 +12,7 @@ let terminate = false
 let imagesHidden = true
 let answersSeen = false
 let answersChecked = false
+let correctCount = 0
 
 let speed = 500
 
@@ -344,7 +345,7 @@ quickStart.addEventListener("click",function(){
 })
 
 gameTypeBtn.addEventListener("click",function() {
-    if ( !loopRunning ) {
+    if ( !loopRunning && !gameActive) {
     if ( gameType === 6 ) {
         gameType = 8
         gameTypeBtn.textContent = "Medium (8)"
@@ -363,6 +364,49 @@ gameTypeBtn.addEventListener("click",function() {
         gameType = 6
         gameTypeBtn.textContent = "Easy (6)"
         imageGrid.classList.remove("twelve")
+    } 
+}
+    if ( !loopRunning && gameActive ) {
+        if ( gameType === 6 && activeArr.length < 8) {
+            gameTypeBtn.classList.add("warning")
+            setTimeout( () => {
+                gameTypeBtn.classList.remove("warning")
+            }, 3000)
+        } else if ( gameType === 6 && activeArr.length >= 8) {
+                gameType = 8
+                gameTypeBtn.textContent = "Medium (8)"
+                imageGrid.classList.add("eight")
+        } else if ( gameType === 8 && activeArr.length < 10 ) {
+            gameType = 6
+            gameTypeBtn.textContent = "Easy (6)"
+            imageGrid.className = ("image-grid")
+            gameTypeBtn.classList.add("warning")
+            setTimeout( () => {
+                gameTypeBtn.classList.remove("warning")
+            }, 3000)
+        } else if ( gameType === 8 && activeArr.length >= 10 ) {
+            gameType = 10
+            gameTypeBtn.textContent = "Hard (10)"
+            imageGrid.classList.remove("eight")
+            imageGrid.classList.add("ten")
+        } else if ( gameType === 10 && activeArr.length < 12 ) {
+            gameType = 6
+            gameTypeBtn.textContent = "Easy (6)"
+            imageGrid.className = ("image-grid")
+            gameTypeBtn.classList.add("warning")
+            setTimeout( () => {
+                gameTypeBtn.classList.remove("warning")
+            }, 3000)
+        } else if ( gameType === 10 && activeArr.length >= 12 ) {
+            gameType = 12
+            gameTypeBtn.textContent = "Hard+ (12)"
+            imageGrid.classList.remove("ten")
+            imageGrid.classList.add("twelve")
+        } else if ( gameType === 12 ) {
+            gameType = 6
+            gameTypeBtn.textContent = "Easy (6)"
+            imageGrid.classList.remove("twelve")
+        }
     }
     if ( gameActive ) {
     imageGrid.innerHTML = ""
@@ -375,7 +419,6 @@ gameTypeBtn.addEventListener("click",function() {
     goToAnswerBtn.classList.add("hide-me")
     }
     }
-}
 })
 
 renderBtn.addEventListener("click", function(){
@@ -500,6 +543,7 @@ goToAnswerBtn.addEventListener("click",function() {
 submitAnswerBtn.addEventListener("click",function() {
     let allImages = document.querySelectorAll(".answer-display-image")
     answersChecked = true
+    correctCount = 0
     allImages.forEach( (x) => {
         let currentImageSrc = x.getAttribute("src")
         if ( displayArr.includes(currentImageSrc) ) {
@@ -507,14 +551,25 @@ submitAnswerBtn.addEventListener("click",function() {
         } else {
             x.classList.add("wrong")
         }
+        if ( x.classList.contains("correct") && x.classList.contains("answer-to-submit") ) {
+            correctCount++
+        }
     })
+    submitAnswerBtn.textContent = `You scored ${correctCount} / ${gameType}`
+    submitAnswerBtn.classList.add("after-answers")
 })
 
 activeArr = animalsArr
 
 function renderGame(arr){
-    
     gameActive = true
+    showHideBtn.textContent = "SHOW ALL"
+    submitAnswerBtn.textContent = "Check Answers"
+    submitAnswerBtn.classList.remove("after-answers")
+    correctCount = 0
+    imagesHidden = true
+    answersSeen = false
+    answersChecked = false
     checkNumbers()
     if ( !answerDisplay.classList.contains("reduced") ) {
     answerDisplay.classList.add("reduced")
@@ -531,36 +586,16 @@ function renderGame(arr){
         <div class="answer-image"></div>
         `
     }
-    let randomNumberOne = Math.random()
-    console.log(randomNumberOne)
-    let randomNumberTwo = Math.random()
-    console.log(randomNumberTwo)
-
-    console.log(arr)
-
-    displayArr = arr
-
-    console.log(displayArr)
-
+    displayArr = arr.slice(0, arr.length)
     displayArr.sort( () => { return 0.5 - Math.random() } )
 
-    console.log(displayArr)
-
-    arr = activeArr
-
-    console.log(arr)
-    
-    console.log(activeArr)
-
-
-    answersArr = arr.slice(0, 12)
-    /*if ( gameType < 10 ) {
+    if ( gameType < 10 ) {
     answersArr = displayArr.slice(0, 12)
     answersArr = answersArr.sort( () => { return 0.5 - Math.random() } )
     } else { 
-        answersArr = activeArr
-        answersArr = answersArr.slice(0, 12)
-    }*/
+        answersArr = arr.slice(0, arr.length)
+        answersArr = answersArr.sort( () => { return 0.5 - Math.random() } ).slice(0, 12)
+    }
     displayArr = displayArr.slice(0, gameType)
 
 
@@ -584,10 +619,6 @@ function renderGame(arr){
         })
     }
     })
-    showHideBtn.textContent = "SHOW ALL"
-    imagesHidden = true
-    answersSeen = false
-    answersChecked = false
     if ( !goToAnswerBtn.classList.contains("hide-me") ) {
     goToAnswerBtn.classList.add("hide-me")
     }
