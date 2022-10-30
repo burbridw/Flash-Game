@@ -13,6 +13,8 @@ let imagesHidden = true
 let answersSeen = false
 let answersChecked = false
 let correctCount = 0
+let submitCount = 0
+let answersInDisplay = 0
 let speed = 500
 
 const gameBtnDisplay = document.getElementById("game-btn-container")
@@ -540,6 +542,7 @@ goToAnswerBtn.addEventListener("click",function() {
 })
 
 submitAnswerBtn.addEventListener("click",function() {
+    answersInDisplay = 0
     let allImages = document.querySelectorAll(".answer-display-image")
     answersChecked = true
     correctCount = 0
@@ -547,6 +550,7 @@ submitAnswerBtn.addEventListener("click",function() {
         let currentImageSrc = x.getAttribute("src")
         if ( displayArr.includes(currentImageSrc) ) {
             x.classList.add("correct")
+            answersInDisplay++
         } else {
             x.classList.add("wrong")
         }
@@ -554,7 +558,7 @@ submitAnswerBtn.addEventListener("click",function() {
             correctCount++
         }
     })
-    submitAnswerBtn.textContent = `You scored ${correctCount} / ${gameType}`
+    submitAnswerBtn.textContent = `You scored ${correctCount} / ${answersInDisplay}`
     submitAnswerBtn.classList.add("after-answers")
 })
 
@@ -564,6 +568,7 @@ function renderGame(arr){
     submitAnswerBtn.textContent = "Check Answers"
     submitAnswerBtn.classList.remove("after-answers")
     correctCount = 0
+    submitCount = 0
     imagesHidden = true
     answersSeen = false
     answersChecked = false
@@ -608,13 +613,15 @@ function renderGame(arr){
     answerImages.forEach( (x) => {
         if ( !answersChecked ) {
         x.addEventListener("click",function() {
-            if ( !x.classList.contains("answer-to-submit") ) {
+            if ( !x.classList.contains("answer-to-submit") && submitCount < gameType ) {
             x.classList.add("answer-to-submit")
-            } else {
+            submitCount++
+            } else if ( x.classList.contains("answer-to-submit") ) {
                 x.classList.remove("answer-to-submit")
-            }
+                submitCount--
+            } console.log(submitCount)
         })
-    }
+    } 
     })
     if ( !goToAnswerBtn.classList.contains("hide-me") ) {
     goToAnswerBtn.classList.add("hide-me")
@@ -635,6 +642,7 @@ function clearAll() {
     gameActive = false
     answersSeen = false
     answersChecked = false
+    submitCount = 0
     if ( !goToAnswerBtn.classList.contains("hide-me") ) {
     goToAnswerBtn.classList.add("hide-me")
     }
