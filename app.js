@@ -498,7 +498,7 @@ flashStart.addEventListener("click",function() {
         flashStart.textContent = "START"
         flashStart.classList.add("flash-start-green")
         flashStart.classList.remove("flash-start-red")
-    }
+        }
 })
 
 function fadeLoop() {
@@ -513,7 +513,6 @@ function fadeLoop() {
 }
 
 function unFadeLoop() {
-    if ( !terminate ) {
     setTimeout(function() {
         let currentImage = imageGrid.children[loopCount]
         currentImage.classList.remove("shown")
@@ -531,7 +530,6 @@ function unFadeLoop() {
         }
     }, speed)
 }
-}
 
 goToAnswerBtn.addEventListener("click",function() {
     if ( !loopRunning ) {
@@ -542,6 +540,7 @@ goToAnswerBtn.addEventListener("click",function() {
 })
 
 submitAnswerBtn.addEventListener("click",function() {
+    if ( !answersChecked ) {
     answersInDisplay = 0
     let allImages = document.querySelectorAll(".answer-display-image")
     answersChecked = true
@@ -560,6 +559,7 @@ submitAnswerBtn.addEventListener("click",function() {
     })
     submitAnswerBtn.textContent = `You scored ${correctCount} / ${answersInDisplay}`
     submitAnswerBtn.classList.add("after-answers")
+}
 })
 
 function renderGame(arr){
@@ -619,7 +619,7 @@ function renderGame(arr){
             } else if ( x.classList.contains("answer-to-submit") ) {
                 x.classList.remove("answer-to-submit")
                 submitCount--
-            } console.log(submitCount)
+            }
         })
     } 
     })
