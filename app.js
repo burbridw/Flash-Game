@@ -14,7 +14,6 @@ let answersSeen = false
 let answersChecked = false
 let correctCount = 0
 let submitCount = 0
-let answersInDisplay = 0
 let speed = 500
 
 const gameBtnDisplay = document.getElementById("game-btn-container")
@@ -541,7 +540,6 @@ goToAnswerBtn.addEventListener("click",function() {
 
 submitAnswerBtn.addEventListener("click",function() {
     if ( !answersChecked ) {
-    answersInDisplay = 0
     let allImages = document.querySelectorAll(".answer-display-image")
     answersChecked = true
     correctCount = 0
@@ -549,15 +547,17 @@ submitAnswerBtn.addEventListener("click",function() {
         let currentImageSrc = x.getAttribute("src")
         if ( displayArr.includes(currentImageSrc) ) {
             x.classList.add("correct")
-            answersInDisplay++
         } else {
             x.classList.add("wrong")
         }
         if ( x.classList.contains("correct") && x.classList.contains("answer-to-submit") ) {
             correctCount++
+        } else if (x.classList.contains("wrong") && !x.classList.contains("answer-to-submit") ) {
+            correctCount++
         }
-    })
-    submitAnswerBtn.textContent = `You scored ${correctCount} / ${answersInDisplay}`
+        })
+    
+    submitAnswerBtn.textContent = `You scored ${correctCount} / 12`
     submitAnswerBtn.classList.add("after-answers")
 }
 })
