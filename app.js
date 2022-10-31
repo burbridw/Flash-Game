@@ -595,8 +595,11 @@ function renderGame(arr){
     answersArr = displayArr.slice(0, 12)
     answersArr = answersArr.sort( () => { return 0.5 - Math.random() } )
     } else { 
-        answersArr = arr.slice(0, arr.length)
-        answersArr = answersArr.sort( () => { return 0.5 - Math.random() } ).slice(0, 12)
+        answersArr = displayArr.slice(0, 2)
+        let remainderArr = displayArr.slice(2, displayArr.length)
+        remainderArr = remainderArr.sort( () => { return 0.5 - Math.random() } ).slice(0, 10)
+        answersArr = answersArr.concat(remainderArr)
+        answersArr = answersArr.sort( () => { return 0.5 - Math.random() } )
     }
     displayArr = displayArr.slice(0, gameType)
 
